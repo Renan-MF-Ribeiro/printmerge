@@ -1,0 +1,5 @@
+export enum AgendaType {
+  ONE_DAY_PER_PAGE = 'ONE_DAY_PER_PAGE',
+  TWO_DAYS_PER_PAGE = 'TWO_DAYS_PER_PAGE',
+  WEEKLY = 'WEEKLY'
+}

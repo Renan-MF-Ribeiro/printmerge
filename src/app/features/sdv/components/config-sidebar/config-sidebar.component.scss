@@ -1,0 +1,141 @@
+.config-sidebar {
+  height: 100%;
+  overflow-y: auto;
+  background: #1a202c;
+  color: white;
+  display: flex;
+  flex-direction: column;
+}
+
+.sidebar-header {
+  padding: 24px 20px 16px;
+  border-bottom: 1px solid #2d3748;
+}
+
+.app-title {
+  font-size: 1.4rem;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 4px;
+  color: #fff;
+}
+
+.logo {
+  font-size: 1.5rem;
+}
+
+.app-subtitle {
+  font-size: 11px;
+  color: #718096;
+  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.config-form {
+  padding: 16px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+}
+
+.form-section {
+  padding: 10px 0;
+  border-bottom: 1px solid #2d3748;
+
+  h3 {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: #718096;
+    margin: 0 0 8px;
+  }
+}
+
+.form-select,
+.form-input {
+  width: 100%;
+  padding: 8px 10px;
+  background: #2d3748;
+  border: 1px solid #4a5568;
+  border-radius: 6px;
+  color: white;
+  font-size: 13px;
+  box-sizing: border-box;
+
+  &:focus {
+    outline: none;
+    border-color: #3182ce;
+  }
+
+  option {
+    background: #2d3748;
+  }
+}
+
+.toggle-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+
+  &.months {
+    gap: 4px;
+  }
+}
+
+.toggle-btn {
+  padding: 4px 8px;
+  background: #2d3748;
+  border: 1px solid #4a5568;
+  border-radius: 4px;
+  color: #a0aec0;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.15s;
+
+  &.active {
+    background: #3182ce;
+    border-color: #3182ce;
+    color: white;
+  }
+
+  &:hover:not(.active) {
+    border-color: #63b3ed;
+    color: #63b3ed;
+  }
+}
+
+.field-error {
+  font-size: 11px;
+  color: #fc8181;
+  margin-top: 4px;
+}
+
+.generate-btn-wrapper {
+  padding: 16px 0;
+}
+
+.btn-generate {
+  width: 100%;
+  padding: 12px;
+  background: #3182ce;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.15s;
+
+  &:hover:not(:disabled) {
+    background: #2b6cb0;
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
