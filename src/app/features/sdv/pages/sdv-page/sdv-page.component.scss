@@ -1,19 +1,32 @@
 .sdv-layout {
-  display: flex;
   height: 100vh;
   overflow: hidden;
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: #0d1117;
 }
 
-.sidebar {
-  flex: 0 0 33.333%;
-  min-width: 240px;
-  max-width: 420px;
-  flex-shrink: 0;
+// ── Config view: large card (70%) centered on dark page ───────────────────────
+.config-view {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 28px;
+  box-sizing: border-box;
+
+  app-config-sidebar {
+    width: 70%;
+    max-height: 92vh;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 24px 64px rgba(0, 0, 0, 0.55);
+    border: 1px solid #2d3748;
+  }
 }
 
-.main-content {
-  flex: 1;
+// ── Preview view: full-screen panel + bottom toolbar ─────────────────────────
+.preview-view {
+  height: 100%;
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -29,14 +42,26 @@
   flex-shrink: 0;
 }
 
-@media (max-width: 768px) {
-  .sdv-layout {
-    flex-direction: column;
-  }
+@media (max-width: 900px) {
+  .config-view {
+    padding: 16px;
 
-  .sidebar {
-    width: 100%;
-    height: auto;
-    max-height: 50vh;
+    app-config-sidebar {
+      width: 90%;
+    }
+  }
+}
+
+@media (max-width: 600px) {
+  .config-view {
+    padding: 12px;
+    align-items: flex-start;
+    padding-top: 16px;
+
+    app-config-sidebar {
+      width: 100%;
+      max-height: calc(100vh - 32px);
+      border-radius: 10px;
+    }
   }
 }

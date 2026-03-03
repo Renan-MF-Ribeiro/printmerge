@@ -8,9 +8,15 @@
   </div>
 
   <form [formGroup]="form" class="config-form">
-
     <section class="form-section">
-      <h3>Tipo de Agenda</h3>
+      <h3>
+        Tipo de Agenda
+        <span
+          class="field-info"
+          data-tooltip="Define como os dias são distribuídos por página: 1 dia, 2 dias ou semana completa."
+          >ⓘ</span
+        >
+      </h3>
       <select formControlName="type" class="form-select">
         <option value="ONE_DAY_PER_PAGE">1 dia por página</option>
         <option value="TWO_DAYS_PER_PAGE">2 dias por página</option>
@@ -19,15 +25,29 @@
     </section>
 
     <section class="form-section">
-      <h3>Ano</h3>
+      <h3>
+        Ano
+        <span
+          class="field-info"
+          data-tooltip="Ano de referência para geração da agenda. Deve estar entre 2020 e 2050."
+          >ⓘ</span
+        >
+      </h3>
       <input type="number" formControlName="year" class="form-input" min="2020" max="2050" />
       <div *ngIf="form.get('year')?.invalid && form.get('year')?.touched" class="field-error">
         Ano inválido (2020-2050)
       </div>
     </section>
 
-    <section class="form-section">
-      <h3>Dias da semana</h3>
+    <section class="form-section full-width">
+      <h3>
+        Dias da semana
+        <span
+          class="field-info"
+          data-tooltip="Selecione quais dias da semana serão incluídos em cada página da agenda."
+          >ⓘ</span
+        >
+      </h3>
       <div class="toggle-group">
         <button
           type="button"
@@ -35,12 +55,21 @@
           [class.active]="form.get('weekDays')?.value?.includes(wd.value)"
           (click)="toggleWeekDay(wd.value)"
           class="toggle-btn"
-        >{{ wd.label }}</button>
+        >
+          {{ wd.label }}
+        </button>
       </div>
     </section>
 
-    <section class="form-section">
-      <h3>Meses</h3>
+    <section class="form-section full-width">
+      <h3>
+        Meses
+        <span
+          class="field-info"
+          data-tooltip="Selecione quais meses do ano serão incluídos na agenda gerada."
+          >ⓘ</span
+        >
+      </h3>
       <div class="toggle-group months">
         <button
           type="button"
@@ -48,12 +77,21 @@
           [class.active]="form.get('months')?.value?.includes(m.value)"
           (click)="toggleMonth(m.value)"
           class="toggle-btn"
-        >{{ m.label }}</button>
+        >
+          {{ m.label }}
+        </button>
       </div>
     </section>
 
     <section class="form-section">
-      <h3>Formato do Dia</h3>
+      <h3>
+        Formato do Dia
+        <span
+          class="field-info"
+          data-tooltip="Define se o número do dia usa zero à esquerda (ex: 01) ou não (ex: 1)."
+          >ⓘ</span
+        >
+      </h3>
       <select formControlName="dayFormat" class="form-select">
         <option value="PADDED">"01" (com zero)</option>
         <option value="UNPADDED">"1" (sem zero)</option>
@@ -61,7 +99,14 @@
     </section>
 
     <section class="form-section">
-      <h3>Formato de Arquivo</h3>
+      <h3>
+        Formato de Arquivo
+        <span
+          class="field-info"
+          data-tooltip="Formato do arquivo exportado. CSV é recomendado para uso direto no CorelDRAW."
+          >ⓘ</span
+        >
+      </h3>
       <select formControlName="exportFormat" class="form-select">
         <option value="CSV">CSV</option>
         <option value="TXT">TXT</option>
@@ -69,14 +114,28 @@
     </section>
 
     <section class="form-section">
-      <h3>Separador</h3>
+      <h3>
+        Separador
+        <span
+          class="field-info"
+          data-tooltip="Caractere que separa as colunas no arquivo exportado. Use ponto e vírgula para Excel/CorelDRAW."
+          >ⓘ</span
+        >
+      </h3>
       <select formControlName="separator" class="form-select">
         <option *ngFor="let sep of separators" [value]="sep.value">{{ sep.label }}</option>
       </select>
     </section>
 
     <section class="form-section">
-      <h3>Template</h3>
+      <h3>
+        Template
+        <span
+          class="field-info"
+          data-tooltip="Estilo de layout da agenda: Comercial (datas e eventos), Executivo (horas), Escolar (turmas e aulas)."
+          >ⓘ</span
+        >
+      </h3>
       <select formControlName="template" class="form-select">
         <option value="COMERCIAL">Comercial</option>
         <option value="EXECUTIVO">Executivo</option>
@@ -85,25 +144,50 @@
     </section>
 
     <section class="form-section">
-      <h3>Nome do Arquivo</h3>
+      <h3>
+        Nome do Arquivo
+        <span
+          class="field-info"
+          data-tooltip="Nome do arquivo gerado, sem extensão. Exemplo: 'agenda_2026'."
+          >ⓘ</span
+        >
+      </h3>
       <input type="text" formControlName="fileName" class="form-input" placeholder="agenda" />
     </section>
 
-    <section class="form-section">
-      <h3>Frases</h3>
-      <p class="phrase-hint">Uma frase por linha. Formato: texto;CATEGORIA</p>
-      <textarea
-        class="phrase-textarea"
-        rows="5"
-        [value]="phraseText"
-        (input)="phraseText = $any($event.target).value"
-        placeholder="Frase motivacional;MOTIVACIONAL&#10;Frase escolar;ESCOLAR"
-      ></textarea>
+    <section class="form-section full-width">
+      <h3>
+        Frases
+        <span
+          class="field-info"
+          data-tooltip="Frases personalizadas por categoria, uma por linha. A importação CSV suporta o formato 'texto;CATEGORIA'."
+          >ⓘ</span
+        >
+      </h3>
+      <div class="phrases-grid">
+        <div class="phrase-category-block" *ngFor="let cat of phraseCategories">
+          <div class="phrase-cat-label">{{ cat.icon }} {{ cat.label }}</div>
+          <textarea
+            class="phrase-textarea"
+            rows="3"
+            [value]="phraseTexts[cat.category]"
+            (input)="phraseTexts[cat.category] = $any($event.target).value"
+            placeholder="Uma frase por linha…"
+          ></textarea>
+        </div>
+      </div>
       <div class="phrase-actions">
-        <button type="button" class="btn-phrase btn-save" (click)="savePhrases()">✔ Salvar</button>
+        <button type="button" class="btn-phrase btn-save" (click)="savePhrases()">
+          ✔ Salvar Frases
+        </button>
         <label class="btn-phrase btn-import">
           📂 Importar CSV
-          <input type="file" accept=".csv,.txt" style="display:none" (change)="importCsvFile($any($event))">
+          <input
+            type="file"
+            accept=".csv,.txt"
+            style="display: none"
+            (change)="importCsvFile($any($event))"
+          />
         </label>
       </div>
     </section>
@@ -118,6 +202,5 @@
         {{ state.isGenerating() ? 'Gerando...' : '⚡ Gerar Agenda' }}
       </button>
     </div>
-
   </form>
 </aside>

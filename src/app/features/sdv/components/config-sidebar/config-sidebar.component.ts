@@ -11,6 +11,7 @@ import { DayFormat } from '../../../../core/enums/day-format.enum';
 import { ExportFormat } from '../../../../core/enums/export-format.enum';
 import { Separator } from '../../../../core/enums/separator.enum';
 import { TemplateType } from '../../../../core/enums/template-type.enum';
+import { PhraseCategory } from '../../../../core/enums/phrase-category.enum';
 import { yearValidator } from '../../../../shared/validators/year.validator';
 
 @Component({
@@ -19,7 +20,7 @@ import { yearValidator } from '../../../../shared/validators/year.validator';
   imports: [CommonModule, ReactiveFormsModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './config-sidebar.component.html',
-  styleUrls: ['./config-sidebar.component.scss']
+  styleUrls: ['./config-sidebar.component.scss'],
 })
 export class ConfigSidebarComponent implements OnInit {
   protected state = inject(SdvState);
@@ -30,7 +31,19 @@ export class ConfigSidebarComponent implements OnInit {
   private persistence = inject(SettingsPersistenceService);
 
   form!: FormGroup;
-  phraseText = '';
+  phraseTexts: Record<PhraseCategory, string> = {
+    [PhraseCategory.MOTIVACIONAL]: '',
+    [PhraseCategory.BIBLICO]: '',
+    [PhraseCategory.EMPRESARIAL]: '',
+    [PhraseCategory.ESCOLAR]: '',
+  };
+
+  readonly phraseCategories: { category: PhraseCategory; label: string; icon: string }[] = [
+    { category: PhraseCategory.MOTIVACIONAL, label: 'Motivacional', icon: '💪' },
+    { category: PhraseCategory.BIBLICO, label: 'Bíblico', icon: '✝️' },
+    { category: PhraseCategory.EMPRESARIAL, label: 'Empresarial', icon: '💼' },
+    { category: PhraseCategory.ESCOLAR, label: 'Escolar', icon: '📚' },
+  ];
 
   readonly agendaTypes = Object.values(AgendaType);
   readonly dayFormats = Object.values(DayFormat);
@@ -39,7 +52,7 @@ export class ConfigSidebarComponent implements OnInit {
     { label: 'Ponto e vírgula (;)', value: Separator.SEMICOLON },
     { label: 'Barra (|)', value: Separator.PIPE },
     { label: 'Vírgula (,)', value: Separator.COMMA },
-    { label: 'Tab', value: Separator.TAB }
+    { label: 'Tab', value: Separator.TAB },
   ];
   readonly templates = Object.values(TemplateType);
   readonly weekDayOptions = [
@@ -49,13 +62,21 @@ export class ConfigSidebarComponent implements OnInit {
     { label: 'Qua', value: 3 },
     { label: 'Qui', value: 4 },
     { label: 'Sex', value: 5 },
-    { label: 'Sáb', value: 6 }
+    { label: 'Sáb', value: 6 },
   ];
   readonly monthOptions = [
-    { label: 'Jan', value: 1 }, { label: 'Fev', value: 2 }, { label: 'Mar', value: 3 },
-    { label: 'Abr', value: 4 }, { label: 'Mai', value: 5 }, { label: 'Jun', value: 6 },
-    { label: 'Jul', value: 7 }, { label: 'Ago', value: 8 }, { label: 'Set', value: 9 },
-    { label: 'Out', value: 10 }, { label: 'Nov', value: 11 }, { label: 'Dez', value: 12 }
+    { label: 'Jan', value: 1 },
+    { label: 'Fev', value: 2 },
+    { label: 'Mar', value: 3 },
+    { label: 'Abr', value: 4 },
+    { label: 'Mai', value: 5 },
+    { label: 'Jun', value: 6 },
+    { label: 'Jul', value: 7 },
+    { label: 'Ago', value: 8 },
+    { label: 'Set', value: 9 },
+    { label: 'Out', value: 10 },
+    { label: 'Nov', value: 11 },
+    { label: 'Dez', value: 12 },
   ];
 
   ngOnInit(): void {
@@ -71,18 +92,22 @@ export class ConfigSidebarComponent implements OnInit {
       exportFormat: [cfg.exportFormat],
       separator: [cfg.separator],
       template: [cfg.template],
-      fileName: [cfg.fileName, Validators.required]
+      fileName: [cfg.fileName, Validators.required],
     });
 
     if (saved) {
       this.state.updateConfig(saved);
     }
 
-    this.phraseText = this.phraseProvider.getPhrasesAsText();
+    for (const cat of Object.values(PhraseCategory)) {
+      this.phraseTexts[cat] = this.phraseProvider.getPhrasesAsTextByCategory(cat);
+    }
   }
 
   savePhrases(): void {
-    this.phraseProvider.setPhrasesFromText(this.phraseText);
+    for (const cat of Object.values(PhraseCategory)) {
+      this.phraseProvider.setPhrasesForCategory(cat, this.phraseTexts[cat]);
+    }
   }
 
   importCsvFile(event: Event): void {
@@ -91,8 +116,11 @@ export class ConfigSidebarComponent implements OnInit {
     if (!file) return;
     const reader = new FileReader();
     reader.onload = (e) => {
-      this.phraseText = (e.target?.result as string) ?? '';
-      this.phraseProvider.setPhrasesFromText(this.phraseText);
+      const content = (e.target?.result as string) ?? '';
+      this.phraseProvider.importFromCsv(content);
+      for (const cat of Object.values(PhraseCategory)) {
+        this.phraseTexts[cat] = this.phraseProvider.getPhrasesAsTextByCategory(cat);
+      }
       input.value = '';
     };
     reader.readAsText(file, 'utf-8');
@@ -100,13 +128,15 @@ export class ConfigSidebarComponent implements OnInit {
 
   toggleWeekDay(day: number): void {
     const current: number[] = this.form.get('weekDays')!.value;
-    const updated = current.includes(day) ? current.filter(d => d !== day) : [...current, day];
+    const updated = current.includes(day) ? current.filter((d) => d !== day) : [...current, day];
     this.form.get('weekDays')!.setValue(updated);
   }
 
   toggleMonth(month: number): void {
     const current: number[] = this.form.get('months')!.value;
-    const updated = current.includes(month) ? current.filter(m => m !== month) : [...current, month];
+    const updated = current.includes(month)
+      ? current.filter((m) => m !== month)
+      : [...current, month];
     this.form.get('months')!.setValue(updated);
   }
 
@@ -125,6 +155,7 @@ export class ConfigSidebarComponent implements OnInit {
       this.state.setRows(rows);
       this.state.setValidation(validation);
       this.state.setGenerating(false);
+      this.state.setView('preview');
     }, 10);
   }
 }

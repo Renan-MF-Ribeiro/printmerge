@@ -20,23 +20,24 @@ export class SdvState {
     separator: Separator.SEMICOLON,
     template: TemplateType.COMERCIAL,
     fileName: 'agenda',
-    multipleYears: true
+    multipleYears: true,
   });
 
   readonly generatedRows = signal<AgendaRow[]>([]);
   readonly validation = signal<CorelValidation | null>(null);
   readonly isGenerating = signal<boolean>(false);
+  readonly view = signal<'config' | 'preview'>('config');
 
   readonly previewRows = computed(() => this.generatedRows().slice(0, 5));
   readonly totalRecords = computed(() => this.generatedRows().length);
   readonly estimatedPages = computed(() => {
     const rows = this.generatedRows();
-    const dataRows = rows.filter(r => !r.dia1.startsWith('{'));
+    const dataRows = rows.filter((r) => !r.dia1.startsWith('{'));
     return Math.ceil(dataRows.length);
   });
 
   updateConfig(partial: Partial<AgendaConfig>): void {
-    this.config.update(c => ({ ...c, ...partial }));
+    this.config.update((c) => ({ ...c, ...partial }));
   }
 
   setRows(rows: AgendaRow[]): void {
@@ -49,5 +50,9 @@ export class SdvState {
 
   setGenerating(value: boolean): void {
     this.isGenerating.set(value);
+  }
+
+  setView(v: 'config' | 'preview'): void {
+    this.view.set(v);
   }
 }
