@@ -98,7 +98,8 @@ export class ConfigSidebarComponent implements OnInit {
     this.persistence.save(config);
 
     setTimeout(() => {
-      const phrases = this.phraseProvider.getDistributed(366);
+      const daysInYear = new Date(config.year, 1, 29).getDate() === 29 ? 366 : 365;
+      const phrases = this.phraseProvider.getDistributed(daysInYear);
       const rows = this.agendaEngine.generate(config, phrases);
       const validation = this.corelValidator.validate(rows);
       this.state.setRows(rows);
