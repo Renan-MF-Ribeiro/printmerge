@@ -1,0 +1,43 @@
+<div class="preview-panel">
+  <div class="preview-header">
+    <h2>Preview</h2>
+    <app-corel-status-badge [validation]="state.validation()"></app-corel-status-badge>
+  </div>
+
+  <div class="stats-row">
+    <div class="stat">
+      <span class="stat-label">Total de Registros</span>
+      <span class="stat-value">{{ state.totalRecords() }}</span>
+    </div>
+    <div class="stat">
+      <span class="stat-label">Páginas Estimadas</span>
+      <span class="stat-value">{{ state.estimatedPages() }}</span>
+    </div>
+  </div>
+
+  <div *ngIf="state.isGenerating()" class="generating">
+    <span>Gerando dados...</span>
+  </div>
+
+  <div *ngIf="state.totalRecords() === 0 && !state.isGenerating()" class="empty-state">
+    <p>Configure as opções ao lado e clique em "Gerar" para visualizar o preview.</p>
+  </div>
+
+  <div *ngIf="state.previewRows().length > 0" class="preview-table-wrapper">
+    <h3>Primeiras {{ state.previewRows().length }} linhas</h3>
+    <div class="table-scroll">
+      <table class="preview-table">
+        <thead>
+          <tr>
+            <th *ngFor="let col of columns">{{ col }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let row of state.previewRows()">
+            <td *ngFor="let col of columns">{{ row[col] }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

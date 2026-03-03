@@ -1,0 +1,10 @@
+<div class="sdv-layout">
+  <div class="config-view" *ngIf="state.view() === 'config'">
+    <app-config-sidebar></app-config-sidebar>
+  </div>
+
+  <main class="preview-view" *ngIf="state.view() === 'preview'">
+    <app-preview-panel class="preview"></app-preview-panel>
+    <app-export-toolbar class="toolbar"></app-export-toolbar>
+  </main>
+</div>

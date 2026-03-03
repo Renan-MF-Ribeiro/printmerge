@@ -1,0 +1,6 @@
+export enum PhraseCategory {
+  MOTIVACIONAL = 'MOTIVACIONAL',
+  BIBLICO = 'BÍBLICO',
+  EMPRESARIAL = 'EMPRESARIAL',
+  ESCOLAR = 'ESCOLAR'
+}
