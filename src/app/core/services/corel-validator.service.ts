@@ -22,16 +22,16 @@ export class CorelValidatorService {
     const actualKeys = Object.keys(firstRow);
     const expectedKeys = this.EXPECTED_COLUMNS;
 
-    for (let i = 0; i < expectedKeys.length; i++) {
-      if (actualKeys[i] !== expectedKeys[i]) {
-        messages.push(`Coluna ${i + 1} esperada: "${expectedKeys[i]}", encontrada: "${actualKeys[i]}"`);
-        status = 'incompatible';
-      }
-    }
-
     if (actualKeys.length !== expectedKeys.length) {
       messages.push(`Número de colunas incorreto: esperado ${expectedKeys.length}, encontrado ${actualKeys.length}`);
       status = 'incompatible';
+    }
+
+    for (let i = 0; i < expectedKeys.length; i++) {
+      if (actualKeys[i] !== expectedKeys[i]) {
+        messages.push(`Coluna ${i + 1} esperada: "${expectedKeys[i]}", encontrada: "${actualKeys[i] ?? 'ausente'}"`);
+        status = 'incompatible';
+      }
     }
 
     if (status === 'compatible') {

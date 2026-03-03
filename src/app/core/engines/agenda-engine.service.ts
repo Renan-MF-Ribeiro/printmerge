@@ -45,6 +45,8 @@ export class AgendaEngine {
   }
 
   private createSeparatorRow(monthName: string): AgendaRow {
+    // dia1 uses {MonthName} format — CorelDRAW Print Merge treats curly-brace
+    // values as section markers, used here to visually separate months in the output.
     return {
       dia1: `{${monthName}}`,
       semana1: '',

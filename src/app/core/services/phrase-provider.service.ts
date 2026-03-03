@@ -30,10 +30,14 @@ export class PhraseProviderService {
   }
 
   importFromCsv(csvContent: string): void {
+    const validCategories = new Set<string>(Object.values(PhraseCategory));
     const lines = csvContent.split('\n').filter(l => l.trim());
     const imported: Phrase[] = lines.map(line => {
       const parts = line.split(';');
-      const category = (parts[1]?.trim() as PhraseCategory) || PhraseCategory.MOTIVACIONAL;
+      const rawCategory = parts[1]?.trim() ?? '';
+      const category = validCategories.has(rawCategory)
+        ? (rawCategory as PhraseCategory)
+        : PhraseCategory.MOTIVACIONAL;
       return { text: parts[0]?.trim() || '', category };
     }).filter(p => p.text);
     this.phrases.update(current => [...current, ...imported]);
