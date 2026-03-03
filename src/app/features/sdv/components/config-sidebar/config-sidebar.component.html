@@ -89,6 +89,25 @@
       <input type="text" formControlName="fileName" class="form-input" placeholder="agenda" />
     </section>
 
+    <section class="form-section">
+      <h3>Frases</h3>
+      <p class="phrase-hint">Uma frase por linha. Formato: texto;CATEGORIA</p>
+      <textarea
+        class="phrase-textarea"
+        rows="5"
+        [value]="phraseText"
+        (input)="phraseText = $any($event.target).value"
+        placeholder="Frase motivacional;MOTIVACIONAL&#10;Frase escolar;ESCOLAR"
+      ></textarea>
+      <div class="phrase-actions">
+        <button type="button" class="btn-phrase btn-save" (click)="savePhrases()">✔ Salvar</button>
+        <label class="btn-phrase btn-import">
+          📂 Importar CSV
+          <input type="file" accept=".csv,.txt" style="display:none" (change)="importCsvFile($any($event))">
+        </label>
+      </div>
+    </section>
+
     <div class="generate-btn-wrapper">
       <button
         type="button"

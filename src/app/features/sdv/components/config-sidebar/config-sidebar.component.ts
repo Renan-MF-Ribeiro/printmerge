@@ -30,6 +30,7 @@ export class ConfigSidebarComponent implements OnInit {
   private persistence = inject(SettingsPersistenceService);
 
   form!: FormGroup;
+  phraseText = '';
 
   readonly agendaTypes = Object.values(AgendaType);
   readonly dayFormats = Object.values(DayFormat);
@@ -76,6 +77,25 @@ export class ConfigSidebarComponent implements OnInit {
     if (saved) {
       this.state.updateConfig(saved);
     }
+
+    this.phraseText = this.phraseProvider.getPhrasesAsText();
+  }
+
+  savePhrases(): void {
+    this.phraseProvider.setPhrasesFromText(this.phraseText);
+  }
+
+  importCsvFile(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const file = input.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      this.phraseText = (e.target?.result as string) ?? '';
+      this.phraseProvider.setPhrasesFromText(this.phraseText);
+      input.value = '';
+    };
+    reader.readAsText(file, 'utf-8');
   }
 
   toggleWeekDay(day: number): void {

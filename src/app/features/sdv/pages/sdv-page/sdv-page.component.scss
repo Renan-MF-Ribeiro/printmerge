@@ -6,8 +6,9 @@
 }
 
 .sidebar {
-  width: 280px;
-  min-width: 280px;
+  flex: 0 0 33.333%;
+  min-width: 240px;
+  max-width: 420px;
   flex-shrink: 0;
 }
 
